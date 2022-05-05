@@ -54,6 +54,12 @@ new Vue({
                 } else if (this.selectedType === 'base64Decode') {
 
                     this.resultContent = tools.utf8Decode(tools.base64Decode(this.sourceContent));
+                } else if (this.selectedType === 'base64EncodeGbk') {
+
+                    this.resultContent = tools.base64Encode(tools.utf8Encode(this.sourceContent));
+                } else if (this.selectedType === 'base64DecodeGbk') {
+
+                    this.resultContent = tools.utf8Decode(tools.base64Decode(this.sourceContent));
                 } else if (this.selectedType === 'md5Encode') {
 
                     this.resultContent = tools.md5(this.sourceContent);
