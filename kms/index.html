@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>KMS 激活助手 - 0xc.in</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif; background: #f3f6f8; color: #333; min-height: 100vh; }
+
+        .page-header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #30333c 100%);
+            color: #fff;
+            padding: 32px 20px 28px;
+            text-align: center;
+        }
+        .page-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+        .page-header .subtitle { font-size: 14px; color: #a0aec0; }
+        .page-header .server-tag {
+            display: inline-block;
+            margin-top: 10px;
+            background: rgba(58,133,255,0.2);
+            border: 1px solid rgba(58,133,255,0.5);
+            color: #7eb6ff;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .container { max-width: 780px; margin: 0 auto; padding: 24px 16px 48px; }
+
+        /* 版本识别提示 */
+        .tip-box {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .tip-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        .tip-toggle:hover { background: #f8f9fa; }
+        .tip-toggle .icon { font-size: 18px; }
+        .tip-toggle .arrow { margin-left: auto; transition: transform 0.2s; color: #999; font-size: 12px; }
+        .tip-toggle.open .arrow { transform: rotate(180deg); }
+        .tip-content {
+            display: none;
+            padding: 0 18px 18px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .tip-content.show { display: block; }
+        .tip-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .tip-step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #3a85ff;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .tip-step-body { font-size: 13px; color: #555; line-height: 1.7; }
+        .tip-step-body code {
+            display: inline-block;
+            background: #f0f4ff;
+            color: #3a85ff;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            margin: 2px 2px;
+        }
+        .tip-step-body b { color: #333; }
+
+        /* 主卡片 */
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-header .step-badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #3a85ff;
+            color: #fff;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-body { padding: 18px; }
+
+        /* 产品选择按钮 */
+        .product-btns { display: flex; gap: 12px; }
+        .product-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.2s;
+        }
+        .product-btn:hover { border-color: #3a85ff; color: #3a85ff; }
+        .product-btn.active { border-color: #3a85ff; background: #f0f6ff; color: #3a85ff; }
+        .product-btn .btn-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+
+        /* 下拉选择 */
+        .select-row { display: flex; gap: 12px; flex-wrap: wrap; }
+        .select-group { flex: 1; min-width: 200px; }
+        .select-group label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; }
+        .select-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 7px;
+            font-size: 14px;
+            color: #333;
+            background: #fafafa;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+            cursor: pointer;
+        }
+        .select-group select:focus { border-color: #3a85ff; background-color: #fff; }
+
+        /* 命令区 */
+        .cmd-placeholder {
+            text-align: center;
+            padding: 30px;
+            color: #bbb;
+            font-size: 14px;
+        }
+        .cmd-placeholder .ph-icon { font-size: 36px; margin-bottom: 8px; }
+
+        .warn-box {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 7px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #7a5c00;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cmd-list { list-style: none; margin-bottom: 16px; }
+        .cmd-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .cmd-code {
+            flex: 1;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            background: #1e2433;
+            color: #e8f0fe;
+            padding: 10px 14px;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .cmd-code .hl { color: #79d3ff; }
+        .btn-copy-single {
+            flex-shrink: 0;
+            padding: 8px 12px;
+            border: 1.5px solid #d0d0d0;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+        .btn-copy-single:hover { border-color: #3a85ff; color: #3a85ff; }
+        .btn-copy-single.copied { border-color: #52c41a; color: #52c41a; background: #f6ffed; }
+
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-primary {
+            flex: 1;
+            min-width: 160px;
+            padding: 11px 16px;
+            background: #3a85ff;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.15s;
+        }
+        .btn-primary:hover { background: #2b74f0; }
+        .btn-primary.copied { background: #52c41a; }
+        .btn-secondary {
+            flex: 1;
+            min-width: 160px;
+            padding: 11px 16px;
+            background: #fff;
+            color: #3a85ff;
+            border: 1.5px solid #3a85ff;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .btn-secondary:hover { background: #f0f6ff; }
+
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-q {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #444;
+            user-select: none;
+        }
+        .faq-q:hover { background: #f8f9fa; }
+        .faq-q .faq-arrow { margin-left: auto; color: #ccc; font-size: 11px; transition: transform 0.2s; }
+        .faq-q.open .faq-arrow { transform: rotate(180deg); }
+        .faq-a {
+            display: none;
+            padding: 0 18px 16px 42px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .faq-a.show { display: block; }
+        .faq-a code {
+            display: inline-block;
+            background: #f0f4ff;
+            color: #3a85ff;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .faq-a ol, .faq-a ul { padding-left: 18px; }
+
+        .back-link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #aaa;
+        }
+        .back-link a { color: #3a85ff; text-decoration: none; }
+        .back-link a:hover { text-decoration: underline; }
+
+        @media (max-width: 500px) {
+            .product-btns { flex-direction: column; }
+            .select-row { flex-direction: column; }
+            .btn-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h1>🔑 KMS 激活助手</h1>
+    <div class="subtitle">三步完成 Windows / Office 激活，命令一键复制</div>
+    <div class="server-tag">服务器：kms.0xc.in</div>
+</div>
+
+<div class="container">
+
+    <!-- 版本识别提示 -->
+    <div class="tip-box">
+        <button class="tip-toggle" id="tipToggle" onclick="toggleTip()">
+            <span class="icon">💡</span>
+            不知道自己是什么版本？点击查看如何确认
+            <span class="arrow">▼</span>
+        </button>
+        <div class="tip-content" id="tipContent">
+            <div class="tip-step">
+                <div class="tip-step-num">1</div>
+                <div class="tip-step-body">
+                    <b>查看 Windows 大版本（Win10 / Win11）：</b><br>
+                    按 <code>Win + R</code>，输入 <code>winver</code>，回车。弹出窗口标题即为您的系统版本。
+                </div>
+            </div>
+            <div class="tip-step">
+                <div class="tip-step-num">2</div>
+                <div class="tip-step-body">
+                    <b>查看具体版本类型（专业版 / 企业版 / 教育版）：</b><br>
+                    右键桌面「此电脑」→「属性」，在「Windows 规格」处查看「版本」一栏。<br>
+                    <span style="color:#999">例如：Windows 10 <b>专业版</b> / Windows 11 <b>企业版</b></span>
+                </div>
+            </div>
+            <div class="tip-step">
+                <div class="tip-step-num">3</div>
+                <div class="tip-step-body">
+                    <b>查看 Office 版本：</b><br>
+                    打开任意 Office 程序（Word/Excel），点击「文件」→「账户」，在「产品信息」处查看版本号。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 1: 选择产品 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="step-badge">1</div>
+            选择要激活的产品
+        </div>
+        <div class="card-body">
+            <div class="product-btns">
+                <button class="product-btn active" id="btnWindows" onclick="selectProduct('windows')">
+                    <span class="btn-icon">🪟</span>
+                    Windows
+                </button>
+                <button class="product-btn" id="btnOffice" onclick="selectProduct('office')">
+                    <span class="btn-icon">📄</span>
+                    Microsoft Office
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: 选择版本 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="step-badge">2</div>
+            选择您的版本
+        </div>
+        <div class="card-body">
+            <div class="select-row">
+                <div class="select-group">
+                    <label>产品版本</label>
+                    <select id="selVersion" onchange="onVersionChange()">
+                        <option value="">-- 请选择 --</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label>版本类型</label>
+                    <select id="selEdition" onchange="onEditionChange()">
+                        <option value="">-- 请先选择产品版本 --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: 获取命令 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="step-badge">3</div>
+            复制命令并执行
+        </div>
+        <div class="card-body" id="cmdArea">
+            <div class="cmd-placeholder">
+                <div class="ph-icon">⌨️</div>
+                请先完成上方版本选择，命令将自动生成
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card">
+        <div class="card-header">
+            ❓ 常见问题
+        </div>
+        <div id="faqList">
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    🔐 如何以管理员身份运行命令提示符？
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-a">
+                    <ol>
+                        <li>点击任务栏的「搜索」图标，输入 <code>cmd</code></li>
+                        <li>在搜索结果中，<b>右键</b>「命令提示符」</li>
+                        <li>选择「<b>以管理员身份运行</b>」</li>
+                        <li>将上方命令逐条粘贴执行（或使用下载的 .bat 脚本）</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    ❌ 出现错误 0x8007007B 怎么办？
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-a">
+                    这通常是 KMS 服务器地址填写错误。请确认已执行 <code>slmgr /skms kms.0xc.in</code>，然后重新执行 <code>slmgr /ato</code>。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    ❌ 出现错误 0xC004F074 / 0xC004F038 怎么办？
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-a">
+                    KMS 服务器连接失败。可能原因：<br>
+                    <ul>
+                        <li>网络问题，检查是否能访问 <code>kms.0xc.in</code></li>
+                        <li>防火墙拦截了 1688 端口，暂时关闭防火墙后重试</li>
+                        <li>部分企业网络会拦截 KMS 流量，尝试切换到手机热点</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    ⏰ KMS 激活后多久有效？需要重复激活吗？
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-a">
+                    KMS 激活有效期为 180 天，Windows 每隔 7 天会自动向 KMS 服务器续期。只要网络正常且服务器在线，激活状态会一直保持。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    🏠 Windows Home（家庭版）可以激活吗？
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-a">
+                    Windows 家庭版<b>不支持</b> KMS 激活。KMS 仅适用于批量授权版本（专业版、企业版、教育版等）。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    📁 Office 激活时找不到 ospp.vbs 怎么办？
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-a">
+                    不同版本的 Office 安装路径不同，脚本中已包含多个路径自动尝试。如仍失败，可手动搜索：
+                    <code>ospp.vbs</code> 文件通常位于 <code>C:\Program Files\Microsoft Office\OfficeXX\</code>，将 XX 替换为 14/15/16 分别对应 2010/2013/2016+。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-link">
+        <a href="../index.html">← 返回首页</a>
+    </div>
+
+</div>
+
+<script>
+const KMS_SERVER = 'kms.0xc.in';
+
+const KMS_DATA = {
+    windows: {
+        'Windows 11': {
+            '专业版 (Pro)': 'W269N-WFGWX-YVC9B-4J6C9-T83GX',
+            '专业 N 版 (Pro N)': 'MH37W-N47XK-V7XM9-C7227-GCQG9',
+            '企业版 (Enterprise)': 'NPPR9-FWDCX-D2C8J-H872K-2YT43',
+            '企业 N 版 (Enterprise N)': 'DPH2V-TTNVB-4X9Q3-TJR4H-KHJW4',
+            '教育版 (Education)': 'NW6C2-QMPVW-D7KKK-3GKT6-VCFB2',
+            '教育 N 版 (Education N)': '2WH4N-8QGBV-H22JP-CT43Q-MDWWJ',
+            '专业教育版 (Pro Education)': '6TP4R-GNPTD-KYYHQ-7B7DP-J447Y',
+            '专业工作站版 (Pro Workstation)': 'NRG8B-VKK3Q-CXVCJ-9G2XF-6Q84J',
+        },
+        'Windows 10': {
+            '专业版 (Pro)': 'W269N-WFGWX-YVC9B-4J6C9-T83GX',
+            '专业 N 版 (Pro N)': 'MH37W-N47XK-V7XM9-C7227-GCQG9',
+            '企业版 (Enterprise)': 'NPPR9-FWDCX-D2C8J-H872K-2YT43',
+            '企业 N 版 (Enterprise N)': 'DPH2V-TTNVB-4X9Q3-TJR4H-KHJW4',
+            '教育版 (Education)': 'NW6C2-QMPVW-D7KKK-3GKT6-VCFB2',
+            '教育 N 版 (Education N)': '2WH4N-8QGBV-H22JP-CT43Q-MDWWJ',
+            '专业教育版 (Pro Education)': '6TP4R-GNPTD-KYYHQ-7B7DP-J447Y',
+            '专业工作站版 (Pro Workstation)': 'NRG8B-VKK3Q-CXVCJ-9G2XF-6Q84J',
+        },
+        'Windows 8.1': {
+            '专业版 (Pro)': 'GCRJD-8NW9H-F2CDX-CCM8D-9D6T9',
+            '企业版 (Enterprise)': 'MHF9N-XY6XB-WVXMC-BTDCT-MKKG7',
+        },
+        'Windows Server 2022': {
+            '标准版 (Standard)': 'VDYBN-27WPP-V4HQT-9VMD4-VMK7H',
+            '数据中心版 (Datacenter)': 'WX4NM-KYWYW-QJJR4-XV3QB-6VM33',
+            'Azure 版 (Datacenter Azure)': 'NTBV8-9K7Q8-V27C6-M2BTV-KHMXV',
+        },
+        'Windows Server 2019': {
+            '标准版 (Standard)': 'N69G4-B89J2-4G8F4-WWYCC-J464C',
+            '数据中心版 (Datacenter)': 'WMDGN-G9PQG-XVVXX-R3X43-63DFG',
+        },
+        'Windows Server 2016': {
+            '标准版 (Standard)': 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY',
+            '数据中心版 (Datacenter)': 'CB7KF-BWN84-R7R2Y-793K2-8XDDG',
+        },
+    },
+    office: {
+        'Office LTSC 2024': {
+            '专业增强版 (Pro Plus)': 'XJ2XN-FW8RK-P4HMP-DKDBV-GCVGB',
+        },
+        'Office LTSC 2021': {
+            '专业增强版 (Pro Plus)': 'FXYTK-NJJ8C-GB6DW-3DYQT-6F7TH',
+        },
+        'Office 2019': {
+            '专业增强版 (Pro Plus)': 'NMMKJ-6RK4F-KMJVX-8D9MJ-6MWKP',
+            '标准版 (Standard)': '6NWWJ-YQWMR-QKGCB-6TMB3-9D9HK',
+        },
+        'Office 2016': {
+            '专业增强版 (Pro Plus)': 'XQNVK-8JYDB-WJ9W3-YJ8YR-WFG99',
+            '标准版 (Standard)': 'JNRGM-WHDWX-FJJG3-K47QV-DRTFM',
+        },
+    }
+};
+
+// Office 版本对应目录编号
+const OFFICE_DIR_MAP = {
+    'Office LTSC 2024': 'Office16',
+    'Office LTSC 2021': 'Office16',
+    'Office 2019': 'Office16',
+    'Office 2016': 'Office16',
+    'Office 2013': 'Office15',
+    'Office 2010': 'Office14',
+};
+
+let currentProduct = 'windows';
+let currentVersion = '';
+let currentEdition = '';
+let currentKey = '';
+
+function selectProduct(p) {
+    currentProduct = p;
+    currentVersion = '';
+    currentEdition = '';
+    currentKey = '';
+    document.getElementById('btnWindows').classList.toggle('active', p === 'windows');
+    document.getElementById('btnOffice').classList.toggle('active', p === 'office');
+    populateVersions();
+    resetCmdArea();
+}
+
+function populateVersions() {
+    const sel = document.getElementById('selVersion');
+    sel.innerHTML = '<option value="">-- 请选择 --</option>';
+    const data = KMS_DATA[currentProduct];
+    for (const v in data) {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        sel.appendChild(opt);
+    }
+    const selEd = document.getElementById('selEdition');
+    selEd.innerHTML = '<option value="">-- 请先选择产品版本 --</option>';
+}
+
+function onVersionChange() {
+    currentVersion = document.getElementById('selVersion').value;
+    currentEdition = '';
+    currentKey = '';
+    const selEd = document.getElementById('selEdition');
+    selEd.innerHTML = '<option value="">-- 请选择版本类型 --</option>';
+    if (currentVersion && KMS_DATA[currentProduct][currentVersion]) {
+        const editions = KMS_DATA[currentProduct][currentVersion];
+        for (const e in editions) {
+            const opt = document.createElement('option');
+            opt.value = e;
+            opt.textContent = e;
+            selEd.appendChild(opt);
+        }
+    }
+    resetCmdArea();
+}
+
+function onEditionChange() {
+    currentEdition = document.getElementById('selEdition').value;
+    if (currentEdition && currentVersion) {
+        currentKey = KMS_DATA[currentProduct][currentVersion][currentEdition] || '';
+        renderCmds();
+    } else {
+        resetCmdArea();
+    }
+}
+
+function resetCmdArea() {
+    document.getElementById('cmdArea').innerHTML = `
+        <div class="cmd-placeholder">
+            <div class="ph-icon">⌨️</div>
+            请先完成上方版本选择，命令将自动生成
+        </div>`;
+}
+
+function renderCmds() {
+    let cmds = [];
+    let bat = '';
+
+    if (currentProduct === 'windows') {
+        cmds = [
+            { label: '设置 KMS 服务器', cmd: `slmgr /skms ${KMS_SERVER}` },
+            { label: '安装产品密钥', cmd: `slmgr /ipk ${currentKey}` },
+            { label: '立即激活', cmd: `slmgr /ato` },
+        ];
+        bat = [
+            '@echo off',
+            'echo KMS 激活助手 - kms.0xc.in',
+            'echo.',
+            `slmgr /skms ${KMS_SERVER}`,
+            `slmgr /ipk ${currentKey}`,
+            `slmgr /ato`,
+            'echo.',
+            'echo 激活完成！如有错误请查看上方提示。',
+            'pause',
+        ].join('\r\n');
+    } else {
+        const officeDir = OFFICE_DIR_MAP[currentVersion] || 'Office16';
+        cmds = [
+            { label: '进入 Office 目录', cmd: `cd /d "%ProgramFiles%\\Microsoft Office\\${officeDir}"` },
+            { label: '设置 KMS 服务器', cmd: `cscript ospp.vbs /sethst:${KMS_SERVER}` },
+            { label: '安装产品密钥', cmd: `cscript ospp.vbs /inpkey:${currentKey}` },
+            { label: '立即激活', cmd: `cscript ospp.vbs /act` },
+        ];
+        bat = [
+            '@echo off',
+            'echo KMS 激活助手 - kms.0xc.in',
+            'echo.',
+            'set "FOUND=0"',
+            `for %%d in (Office16 Office15 Office14) do (`,
+            `  if exist "%ProgramFiles%\\Microsoft Office\\%%d\\ospp.vbs" (`,
+            `    cd /d "%ProgramFiles%\\Microsoft Office\\%%d"`,
+            `    set "FOUND=1"`,
+            `    goto :found`,
+            `  )`,
+            `  if exist "%ProgramFiles(x86)%\\Microsoft Office\\%%d\\ospp.vbs" (`,
+            `    cd /d "%ProgramFiles(x86)%\\Microsoft Office\\%%d"`,
+            `    set "FOUND=1"`,
+            `    goto :found`,
+            `  )`,
+            `)`,
+            ':found',
+            'if "%FOUND%"=="0" (echo 未找到 Office 安装目录，请手动指定路径 & pause & exit)',
+            `cscript ospp.vbs /sethst:${KMS_SERVER}`,
+            `cscript ospp.vbs /inpkey:${currentKey}`,
+            `cscript ospp.vbs /act`,
+            'echo.',
+            'echo 激活完成！如有错误请查看上方提示。',
+            'pause',
+        ].join('\r\n');
+    }
+
+    const allCmds = cmds.map(c => c.cmd).join('\n');
+
+    const cmdItemsHtml = cmds.map((c, i) => `
+        <li class="cmd-item">
+            <div class="cmd-code">${escHtml(c.cmd)}</div>
+            <button class="btn-copy-single" onclick="copySingle(this, ${JSON.stringify(c.cmd)})">复制</button>
+        </li>
+    `).join('');
+
+    document.getElementById('cmdArea').innerHTML = `
+        <div class="warn-box">
+            ⚠️ 必须以 <b>管理员身份</b> 运行命令提示符，否则激活会失败
+        </div>
+        <p style="font-size:13px;color:#888;margin-bottom:12px;">
+            已为您生成激活命令，将以下命令<b>逐条</b>粘贴到管理员命令提示符执行：
+        </p>
+        <ul class="cmd-list">${cmdItemsHtml}</ul>
+        <div class="btn-row">
+            <button class="btn-primary" id="btnCopyAll" onclick="copyAll(${JSON.stringify(allCmds)})">
+                📋 一键复制全部命令
+            </button>
+            <button class="btn-secondary" onclick="downloadBat(${JSON.stringify(bat)})">
+                ⬇ 下载一键激活脚本 (.bat)
+            </button>
+        </div>
+        <p style="font-size:12px;color:#bbb;margin-top:10px;">
+            提示：.bat 脚本右键选择「以管理员身份运行」即可自动完成激活
+        </p>
+    `;
+}
+
+function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copySingle(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✅ 已复制';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '复制';
+            btn.classList.remove('copied');
+        }, 1500);
+    });
+}
+
+function copyAll(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btnCopyAll');
+        btn.textContent = '✅ 已复制到剪贴板';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '📋 一键复制全部命令';
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+function downloadBat(content) {
+    const blob = new Blob([content], { type: 'text/plain;charset=gbk' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kms-activate.bat';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function toggleTip() {
+    const toggle = document.getElementById('tipToggle');
+    const content = document.getElementById('tipContent');
+    toggle.classList.toggle('open');
+    content.classList.toggle('show');
+}
+
+function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    el.classList.toggle('open');
+    answer.classList.toggle('show');
+}
+
+// 初始化版本列表
+populateVersions();
+</script>
+</body>
+</html>
