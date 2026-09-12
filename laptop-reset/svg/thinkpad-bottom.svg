@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" role="img" aria-label="ThinkPad 底部视图，标出应急复位孔的常见位置区域">
+  <style>
+    .ln{fill:none;stroke:currentColor;stroke-width:2}
+    .thin{fill:none;stroke:currentColor;stroke-width:1.4;opacity:.55}
+    .fillc{fill:currentColor}
+    .t{font-family:system-ui,'PingFang SC','Microsoft YaHei',sans-serif;fill:currentColor}
+    .h{font-size:16px;font-weight:700}
+    .lbl{font-size:13px}
+    .d{font-size:12.5px;opacity:.7}
+    .ok{stroke:var(--accent,#B33A22);stroke-width:2.5;fill:none}
+    .okf{fill:var(--accent,#B33A22)}
+    .okd{stroke:var(--accent,#B33A22);stroke-width:1.6;fill:none;stroke-dasharray:6 5}
+    .lead{stroke:currentColor;stroke-width:1;opacity:.5;fill:none}
+  </style>
+
+  <text class="t h" x="0" y="18">ThinkPad 底部视图 · 应急复位孔常见位置</text>
+  <text class="t d" x="0" y="38">示意线稿，非任何具体型号。实际位置务必按机型查官方 Bottom view 图。</text>
+
+  <!-- body -->
+  <rect class="ln" x="120" y="70" width="480" height="320" rx="14"/>
+  <!-- hinge edge (rear) -->
+  <line class="thin" x1="120" y1="112" x2="600" y2="112"/>
+  <text class="t d" x="360" y="103" text-anchor="middle">转轴一侧（机身后缘）</text>
+
+  <!-- fan vents -->
+  <g class="thin">
+    <rect x="188" y="128" width="120" height="46" rx="4"/>
+    <path d="M198 134v34M210 134v34M222 134v34M234 134v34M246 134v34M258 134v34M270 134v34M282 134v34M294 134v34"/>
+  </g>
+  <path class="lead" d="M188 151H86"/>
+  <text class="t lbl" x="80" y="148" text-anchor="end">散热风扇口</text>
+  <text class="t d" x="80" y="165" text-anchor="end">大面积栅格，不是孔</text>
+
+  <!-- drainage slots -->
+  <g class="thin">
+    <rect x="330" y="196" width="30" height="7" rx="3.5"/>
+    <rect x="378" y="196" width="30" height="7" rx="3.5"/>
+  </g>
+  <path class="lead" d="M408 200h94"/>
+  <text class="t lbl" x="510" y="197">键盘排液孔</text>
+  <text class="t d" x="510" y="214">长条形，成对</text>
+
+  <!-- speakers -->
+  <g class="fillc" opacity=".75">
+    <g>
+      <circle cx="176" cy="322" r="2"/><circle cx="190" cy="322" r="2"/><circle cx="204" cy="322" r="2"/><circle cx="218" cy="322" r="2"/><circle cx="232" cy="322" r="2"/>
+      <circle cx="176" cy="334" r="2"/><circle cx="190" cy="334" r="2"/><circle cx="204" cy="334" r="2"/><circle cx="218" cy="334" r="2"/><circle cx="232" cy="334" r="2"/>
+      <circle cx="176" cy="346" r="2"/><circle cx="190" cy="346" r="2"/><circle cx="204" cy="346" r="2"/><circle cx="218" cy="346" r="2"/><circle cx="232" cy="346" r="2"/>
+    </g>
+    <g>
+      <circle cx="490" cy="322" r="2"/><circle cx="504" cy="322" r="2"/><circle cx="518" cy="322" r="2"/><circle cx="532" cy="322" r="2"/><circle cx="546" cy="322" r="2"/>
+      <circle cx="490" cy="334" r="2"/><circle cx="504" cy="334" r="2"/><circle cx="518" cy="334" r="2"/><circle cx="532" cy="334" r="2"/><circle cx="546" cy="334" r="2"/>
+      <circle cx="490" cy="346" r="2"/><circle cx="504" cy="346" r="2"/><circle cx="518" cy="346" r="2"/><circle cx="532" cy="346" r="2"/><circle cx="546" cy="346" r="2"/>
+    </g>
+  </g>
+  <path class="lead" d="M170 334H86"/>
+  <text class="t lbl" x="80" y="331" text-anchor="end">扬声器</text>
+  <text class="t d" x="80" y="348" text-anchor="end">左右对称各一片</text>
+
+  <!-- screws -->
+  <g class="thin">
+    <circle cx="142" cy="92" r="5"/><circle cx="578" cy="92" r="5"/>
+    <circle cx="142" cy="368" r="5"/><circle cx="578" cy="368" r="5"/>
+    <circle cx="360" cy="372" r="5"/>
+  </g>
+
+  <!-- reset hole zone -->
+  <rect class="okd" x="404" y="122" width="150" height="58" rx="8"/>
+  <circle class="ok" cx="470" cy="151" r="7"/>
+  <circle class="okf" cx="470" cy="151" r="2.5"/>
+  <path class="lead" d="M554 151h60" stroke="var(--accent,#B33A22)" opacity=".8"/>
+  <text class="t lbl" x="622" y="141" fill="var(--accent,#B33A22)" font-weight="700">应急复位孔</text>
+  <text class="t d" x="622" y="159">多在这片区域：</text>
+  <text class="t d" x="622" y="176">靠近转轴、电源口</text>
+  <text class="t d" x="622" y="193">或某个 USB-C 口旁</text>
+  <text class="t d" x="622" y="210">可能被同色胶塞盖住</text>
+
+  <text class="t d" x="0" y="422">孤立的单个小圆孔，插进去能顶到有回弹感的按钮。找不到就说明该机型没有，改用长按电源键 60 秒。</text>
+  <text class="t d" x="0" y="442">查法：联想支持站 → 输入机型或序列号 → Guides and Manuals → Hardware Maintenance Manual → 搜 Emergency</text>
+</svg>

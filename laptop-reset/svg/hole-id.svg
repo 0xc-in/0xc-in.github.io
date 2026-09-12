@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" role="img" aria-label="机身底部五种相似孔位的辨识对照">
+  <style>
+    .ln{fill:none;stroke:currentColor;stroke-width:2}
+    .fillc{fill:currentColor}
+    .t{font-family:system-ui,'PingFang SC','Microsoft YaHei',sans-serif;fill:currentColor}
+    .h{font-size:16px;font-weight:700}
+    .d{font-size:13px;opacity:.72}
+    .ok{stroke:var(--accent,#B33A22);stroke-width:2.5;fill:none}
+    .okf{fill:var(--accent,#B33A22)}
+    .okt{fill:var(--accent,#B33A22);font-weight:700}
+    .div{stroke:currentColor;stroke-width:1;opacity:.25}
+  </style>
+
+  <text class="t h" x="0" y="18">机身底部这几个孔长得很像，只有一个是复位孔</text>
+
+  <!-- 1 复位针孔 -->
+  <g transform="translate(0,52)">
+    <rect class="ok" x="0" y="0" width="164" height="98" rx="4"/>
+    <circle class="ok" cx="82" cy="40" r="7"/>
+    <circle class="okf" cx="82" cy="40" r="2.5"/>
+    <path class="ok" d="M82 22v-9M82 67v9M60 40h-9M104 40h9" stroke-width="1.5" opacity=".55"/>
+    <text class="t okt" x="82" y="88" font-size="14" text-anchor="middle">复位针孔</text>
+  </g>
+  <text class="t d" x="0" y="172">孤零零一个，周围没有同伴</text>
+  <text class="t d" x="0" y="192">孔径细，回形针刚好能进</text>
+  <text class="t d" x="0" y="212">深处能顶到一个有回弹感的按钮</text>
+  <text class="t d" x="0" y="232">常在靠近转轴或电源口一侧</text>
+  <text class="t d" x="0" y="252">旁边可能有电池或箭头图标</text>
+
+  <line class="div" x1="184" y1="52" x2="184" y2="262"/>
+
+  <!-- 2 麦克风孔 -->
+  <g transform="translate(204,52)">
+    <rect class="ln" x="0" y="0" width="130" height="98" rx="4" opacity=".45"/>
+    <circle class="fillc" cx="52" cy="40" r="2.5"/>
+    <circle class="fillc" cx="78" cy="40" r="2.5"/>
+    <text class="t" x="65" y="88" font-size="14" text-anchor="middle">麦克风孔</text>
+  </g>
+  <text class="t d" x="204" y="172">通常成对出现，间距很小</text>
+  <text class="t d" x="204" y="192">孔径比复位孔更细</text>
+  <text class="t d" x="204" y="212">插进去顶不到任何东西</text>
+
+  <line class="div" x1="354" y1="52" x2="354" y2="262"/>
+
+  <!-- 3 扬声器 -->
+  <g transform="translate(374,52)">
+    <rect class="ln" x="0" y="0" width="130" height="98" rx="4" opacity=".45"/>
+    <g class="fillc">
+      <circle cx="40" cy="30" r="2"/><circle cx="55" cy="30" r="2"/><circle cx="70" cy="30" r="2"/><circle cx="85" cy="30" r="2"/>
+      <circle cx="40" cy="42" r="2"/><circle cx="55" cy="42" r="2"/><circle cx="70" cy="42" r="2"/><circle cx="85" cy="42" r="2"/>
+      <circle cx="40" cy="54" r="2"/><circle cx="55" cy="54" r="2"/><circle cx="70" cy="54" r="2"/><circle cx="85" cy="54" r="2"/>
+    </g>
+    <text class="t" x="65" y="88" font-size="14" text-anchor="middle">扬声器孔</text>
+  </g>
+  <text class="t d" x="374" y="172">密集阵列，几十上百个</text>
+  <text class="t d" x="374" y="192">左右对称各一片</text>
+  <text class="t d" x="374" y="212">捅进去会扎破喇叭振膜</text>
+
+  <line class="div" x1="524" y1="52" x2="524" y2="262"/>
+
+  <!-- 4 排液孔 -->
+  <g transform="translate(544,52)">
+    <rect class="ln" x="0" y="0" width="130" height="98" rx="4" opacity=".45"/>
+    <rect class="ln" x="38" y="34" width="24" height="6" rx="3"/>
+    <rect class="ln" x="72" y="34" width="24" height="6" rx="3"/>
+    <rect class="ln" x="38" y="50" width="24" height="6" rx="3"/>
+    <rect class="ln" x="72" y="50" width="24" height="6" rx="3"/>
+    <text class="t" x="65" y="88" font-size="14" text-anchor="middle">键盘排液孔</text>
+  </g>
+  <text class="t d" x="544" y="172">是细长条形，不是圆孔</text>
+  <text class="t d" x="544" y="192">位置对应键盘正下方</text>
+  <text class="t d" x="544" y="212">ThinkPad 上尤其常见</text>
+
+  <line class="div" x1="694" y1="52" x2="694" y2="262"/>
+
+  <!-- 5 螺丝孔 -->
+  <g transform="translate(714,52)">
+    <rect class="ln" x="0" y="0" width="130" height="98" rx="4" opacity=".45"/>
+    <circle class="ln" cx="65" cy="42" r="9"/>
+    <path class="ln" d="M65 35v14M58 42h14" stroke-width="1.6"/>
+    <text class="t" x="65" y="88" font-size="14" text-anchor="middle">螺丝孔</text>
+  </g>
+  <text class="t d" x="714" y="172">孔里能看到十字或梅花槽</text>
+  <text class="t d" x="714" y="192">沿边缘规律分布</text>
+  <text class="t d" x="714" y="212">数量多，通常 6 个以上</text>
+
+  <text class="t d" x="0" y="298" font-size="13">判断不了就别插。去官方支持站按机型查 Bottom view 图，确认之后再动手。</text>
+</svg>
