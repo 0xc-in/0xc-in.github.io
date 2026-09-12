@@ -1,0 +1,626 @@
+{
+  "meta": {
+    "title": "笔记本黑屏 · 放电与复位速查",
+    "scope": "只覆盖不拆机、不刷BIOS、无需U盘的复位手段",
+    "updated": "2026-09",
+    "note": "俗称的“静电导致开不了机”，实际多为 EC 锁死、电容残余电荷或 CMOS 状态异常。真正的静电击穿不可逆，按键救不回来。"
+  },
+  "image_guidance": {
+    "principle": "图只用来帮人找到实物位置（针孔、侧面按键），不用来演示按键组合。按键组合用 CSS 键帽渲染即可，除非左右不好分辨。",
+    "assets_dir": "svg/",
+    "license": "本目录所有 SVG 为原创线稿，无版权限制，可自由修改分发。",
+    "styling": "线稿用 stroke=\"currentColor\"，跟随文字颜色自动适配深浅色模式。强调色走 CSS 变量 --accent（默认 #B33A22），Novo 按钮那张另有 --warn（默认 #8A6D1F）。",
+    "caveat": "线稿是示意图不是型号图。孔的实际位置每台不同，页面上必须同时给出 lookup_path 让用户查自己机型，不能让人拿着示意图去比对实机。",
+    "field_meaning": {
+      "asset": "本仓库内的线稿文件",
+      "official_figure": "官方标注图所在页面，需要精确位置时跳这里",
+      "per_model": "true 表示位置因型号而异，页面上应做成型号查询入口",
+      "lookup_path": "用户查到自己机型那张图的点击路径"
+    }
+  },
+  "keycap_legend": {
+    "POWER": "电源键",
+    "VOLUP": "音量加",
+    "PINHOLE": "机身针孔",
+    "WIN": "Windows 键"
+  },
+  "triage": [
+    {
+      "id": "no-life",
+      "symptom": "无灯、无风扇、完全没反应",
+      "action": "先查供电和电量，再做通用放电",
+      "detail": "换插座换线，确认适配器指示灯亮。部分品牌有低电量保护（荣耀为 6%），电量过低时必须接原装适配器才能开机，先充 30 分钟。"
+    },
+    {
+      "id": "fan-black",
+      "symptom": "风扇转，屏幕和键盘背光都不亮",
+      "action": "通用放电 → 品牌专用复位",
+      "detail": "最典型的 EC 锁死 / CMOS 异常，本手册主场景。"
+    },
+    {
+      "id": "blink",
+      "symptom": "大写锁定灯规律闪烁或有蜂鸣",
+      "action": "先数闪码再动手",
+      "detail": "这是 POST 错误码。用手机录一段回放，数清一个循环闪几下，对照品牌码表。"
+    },
+    {
+      "id": "ext-ok",
+      "symptom": "外接显示器有画面",
+      "action": "不是本手册范围",
+      "detail": "主板固件正常，故障在屏幕、背光或屏线。手电筒斜照屏幕，能看到隐约图像即背光问题。"
+    },
+    {
+      "id": "logo-ok",
+      "symptom": "能出 logo 但进不去系统",
+      "action": "不是本手册范围",
+      "detail": "固件是好的，走安全模式或系统修复。"
+    }
+  ],
+  "universal": {
+    "id": "hard-reset",
+    "label": "通用放电（第 0 步，先做这个）",
+    "risk": "无风险，不丢数据",
+    "keys": [
+      "POWER"
+    ],
+    "hold_seconds": 40,
+    "steps": [
+      "拔电源适配器，拔掉全部外设：U盘、扩展坞、HDMI、SD卡、外接显示器",
+      "电池可拆的取下，不可拆的直接下一步",
+      "长按电源键。HP/Dell 15–30 秒，微星 25 秒以上，华硕 40 秒；不确定就按满 40 秒",
+      "只插回电源适配器，按电源键开机"
+    ],
+    "cautions": [
+      "华硕 TP420IA / UX425IA 必须接着适配器做，不能拔电",
+      "若黑屏是刷 BIOS 中断造成的，复位后接电可能自动续刷，此时不要断电"
+    ]
+  },
+  "brands": [
+    {
+      "id": "hp",
+      "name": "HP 惠普",
+      "models": "Elite / EliteBook / ProBook / Pavilion / Victus / OMEN",
+      "procedures": [
+        {
+          "label": "硬复位",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 15,
+          "steps": [
+            "拔适配器和全部外设，电池可拆则取下",
+            "长按电源键 15 秒",
+            "接回电源开机"
+          ]
+        },
+        {
+          "label": "BIOS 恢复",
+          "keys": [
+            "WIN",
+            "B",
+            "POWER"
+          ],
+          "steps": [
+            "关机，接好电源适配器",
+            "按住 Win + B 不放",
+            "再按住电源键 2–3 秒后松开电源键，继续按住 Win + B"
+          ],
+          "success_signal": "听到一串蜂鸣（常见 8 声），出现 HP BIOS Update 画面并自动恢复",
+          "cautions": [
+            "电源键按太久会导致电源灯熄灭，说明按过头，重来并严格控制 2–3 秒",
+            "恢复过程中绝对不能断电"
+          ]
+        },
+        {
+          "label": "CMOS 重置",
+          "keys": [
+            "WIN",
+            "V",
+            "POWER"
+          ],
+          "steps": [
+            "Win+B 不出画面时改用这一组，操作时序相同",
+            "按住 Win + V，按住电源键 2–3 秒后松开电源键，继续按住 Win + V"
+          ],
+          "success_signal": "屏幕显示 CMOS Reset 完成提示，按 Enter 重启",
+          "notes": [
+            "官方文档中这一组有两个用途：部分机型的 BIOS 恢复入口，以及自动 BIOS 恢复因 CMOS 数据损坏失败时的重置手段",
+            "备用时序：按住 Win+V，电源键只按 1 秒，然后持续按住 Win+V 最长 40 秒"
+          ]
+        }
+      ],
+      "blink_codes": {
+        "indicator": "Caps Lock / Num Lock 灯",
+        "codes": [
+          {
+            "count": 1,
+            "meaning": "CPU 无法工作"
+          },
+          {
+            "count": 2,
+            "meaning": "BIOS 损坏，走 Win+B / Win+V"
+          },
+          {
+            "count": 3,
+            "meaning": "内存故障或未插好（最常见，重新拔插内存）"
+          },
+          {
+            "count": 4,
+            "meaning": "显示控制器故障"
+          },
+          {
+            "count": 5,
+            "meaning": "主板故障"
+          },
+          {
+            "count": 6,
+            "meaning": "BIOS 认证失败"
+          }
+        ]
+      },
+      "source": "https://h30434.www3.hp.com/t5/Notebook-Boot-and-Lockup/bios-recovery-500-and-black-screen/td-p/7789611",
+      "image_note": "按键组合用键帽渲染即可，不需要配图。CMOS Reset 成功画面若想配，官方截图在 source 链接的帖子里。"
+    },
+    {
+      "id": "dell",
+      "name": "Dell 戴尔",
+      "models": "Latitude / XPS / Inspiron / Precision",
+      "procedures": [
+        {
+          "label": "放电",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 60,
+          "steps": [
+            "拔充电器和全部外设，电池可拆则取下",
+            "长按电源键 30–60 秒",
+            "接回电源开机"
+          ]
+        },
+        {
+          "label": "BIOS Recovery 2",
+          "keys": [
+            "Ctrl",
+            "Esc"
+          ],
+          "steps": [
+            "拔掉所有 U 盘",
+            "确认电池电量至少 25%",
+            "拔掉电源线",
+            "按住 Ctrl + Esc 不放，直到出现恢复画面"
+          ],
+          "cautions": [
+            "必须用机器自带键盘，外接键盘无效",
+            "按 15–20 秒无反应就延长到 30 秒",
+            "仅 2015 年 12 月之后的机型支持"
+          ]
+        },
+        {
+          "label": "屏幕自检 LCD BIST",
+          "keys": [
+            "D",
+            "POWER"
+          ],
+          "steps": [
+            "按住 D 键再按电源键"
+          ],
+          "success_signal": "屏幕依次刷出纯色，说明屏幕和背光正常，问题在更上游"
+        }
+      ],
+      "source": "https://www.dell.com/support/kbdoc/en-us/000132453/how-to-recover-the-bios-on-a-dell-computer-or-tablet",
+      "image_note": "LCD BIST 的纯色刷屏画面用 CSS 色块模拟即可，不必找图。"
+    },
+    {
+      "id": "lenovo",
+      "name": "Lenovo 联想",
+      "models": "ThinkPad / IdeaPad",
+      "procedures": [
+        {
+          "label": "应急复位孔（ThinkPad）",
+          "keys": [
+            "PINHOLE"
+          ],
+          "hold_seconds": 60,
+          "steps": [
+            "断开一切供电：适配器、扩展坞、全部 USB 外设",
+            "拉直回形针插入机身底部的应急复位孔，按住",
+            "接回电源",
+            "按电源键开机"
+          ],
+          "success_signal": "接回电源后电源指示灯闪 3 下",
+          "cautions": [
+            "不要盲插任何小孔，扬声器孔、散热孔、键盘排液孔长得很像",
+            "按住时长各方说法不一：联想官方图解页只写“插入回形针复位”未标时长，第三方文档有 10 秒、15 秒、30 秒、60 秒多种说法。保险做法是按满 60 秒，按久无害"
+          ],
+          "image": {
+            "asset": "svg/thinkpad-bottom.svg",
+            "also": "svg/hole-id.svg",
+            "official_figure": "https://support.lenovo.com/us/en/solutions/PD103782",
+            "official_figure_alt": "https://pcsupport.lenovo.com/ng/en/solutions/PD104990",
+            "per_model": true,
+            "lookup_path": "联想支持站 → 输入机型或序列号 → Guides and Manuals → Hardware Maintenance Manual → 搜 Emergency",
+            "note": "官方 Bottom view 图把 Emergency-reset hole、Speakers、Fan louvers、Keyboard drainage holes 分别编号，需要精确位置时跳过去看。"
+          }
+        },
+        {
+          "label": "BIOS 内断开电池",
+          "keys": [],
+          "steps": [
+            "还能进 BIOS 时，设置里选 Disable built-in battery，机器会关机并物理断开内置电池，等同一次彻底放电"
+          ]
+        }
+      ],
+      "notes": [
+        "IdeaPad 上那个类似的小孔通常是 Novo 按钮，进的是一键恢复菜单，不是放电孔，功能完全不同，菜单里的恢复选项会删数据"
+      ],
+      "source": "https://support.mckimcreed.com/hc/en-us/articles/22495303338907-Lenovo-Thinkpad-Emergency-Power-Reset-Pinhole-Reset",
+      "image": {
+        "asset": "svg/lenovo-reset-vs-novo.svg",
+        "per_model": false,
+        "note": "放在联想条目顶部，这是全手册最容易出事的地方"
+      }
+    },
+    {
+      "id": "asus",
+      "name": "ASUS 华硕",
+      "models": "Vivobook / Zenbook / TUF / ROG",
+      "procedures": [
+        {
+          "label": "EC / RTC 复位",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 40,
+          "steps": [
+            "移除所有外接设备",
+            "拔适配器，电池可拆则取下",
+            "长按电源键 40 秒",
+            "接回适配器和电池，开机"
+          ],
+          "success_signal": "部分机型为 20 秒设计：按到第 15 秒左右电源灯开始快闪 3–5 秒，闪烁停止后松手即触发成功",
+          "cautions": [
+            "TP420IA 和 UX425IA 不能拔适配器，必须接着电源做"
+          ]
+        }
+      ],
+      "notes": [
+        "若黑屏由刷 BIOS 失败造成：复位后接电开机会自动继续未完成的更新，不要拔电、不要打断，等它刷完自动重启"
+      ],
+      "source": "https://www.asus.com/support/faq/1050239/",
+      "image_note": "电源灯快闪是 20 秒机型判断成功的唯一依据，用 CSS 动画表现比静态图清楚。"
+    },
+    {
+      "id": "acer",
+      "name": "Acer 宏碁",
+      "models": "Aspire / Nitro / Predator / Extensa / TravelMate",
+      "procedures": [
+        {
+          "label": "放电",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 60,
+          "steps": [
+            "拔充电器和全部 USB 设备",
+            "长按电源键 30–60 秒",
+            "只接回充电器开机"
+          ]
+        },
+        {
+          "label": "电池重置针孔",
+          "keys": [
+            "PINHOLE"
+          ],
+          "hold_seconds": 4,
+          "steps": [
+            "拔掉电源适配器",
+            "找到机身底部的电池重置针孔",
+            "回形针插入，按住 4 秒",
+            "让机器完全断电静置 5 分钟",
+            "接回适配器开机"
+          ],
+          "notes": [
+            "作用是临时断开再接回内置电池",
+            "宏碁同时提供针孔和长按电源键两种方式，两个都可以试",
+            "部分较新机型（如 Predator Helios 300 P317-54）已取消该针孔，找不到属正常"
+          ],
+          "cautions": [
+            "操作时不能接着充电器"
+          ],
+          "image": {
+            "asset": "svg/acer-msi-bottom.svg",
+            "also": "svg/hole-id.svg",
+            "official_figure": "https://us.answers.acer.com/app/answers/detail/a_id/34843/~/acer-internal-battery-reset",
+            "per_model": true,
+            "lookup_path": "acer 官网 → 支持 → 输入型号 → 使用手册 → 机身概览页"
+          }
+        },
+        {
+          "label": "进恢复环境",
+          "keys": [
+            "Alt",
+            "F10"
+          ],
+          "steps": [
+            "长按电源键 10 秒彻底关机",
+            "按住 Alt 连点 F10 开机，出现 Acer logo 时松开"
+          ],
+          "notes": [
+            "仅在还能出画面时可用"
+          ]
+        }
+      ],
+      "source": "https://us.answers.acer.com/app/answers/detail/a_id/34843/~/acer-internal-battery-reset"
+    },
+    {
+      "id": "msi",
+      "name": "MSI 微星",
+      "models": "Stealth / Raider / Katana / GE / GS",
+      "procedures": [
+        {
+          "label": "先充电",
+          "keys": [],
+          "steps": [
+            "用原装适配器充至少 30 分钟再试，同时拔掉所有外设",
+            "近期加过内存或硬盘的，先恢复成原配置"
+          ]
+        },
+        {
+          "label": "EC Reset",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 25,
+          "steps": [
+            "关机",
+            "断开交流电源",
+            "长按电源键超过 25 秒",
+            "接回电源开机"
+          ],
+          "notes": [
+            "按住过程中电源灯可能短暂亮灭一次，属正常；社区经验通常按到 30–60 秒"
+          ]
+        },
+        {
+          "label": "电池重置孔",
+          "keys": [
+            "PINHOLE"
+          ],
+          "hold_seconds": 10,
+          "steps": [
+            "关机，拔掉交流电源",
+            "用拉直的回形针插入机身底部 Battery Reset Hole，保持 10 秒",
+            "接回电源开机"
+          ],
+          "image": {
+            "asset": "svg/acer-msi-bottom.svg",
+            "also": "svg/hole-id.svg",
+            "official_figure": "https://download.msi.com/archive/mnu_exe/16JF+16JE+179F+179E_v1.0_English.zip",
+            "per_model": true,
+            "lookup_path": "msi.com → Support → 输入型号 → Manual → 下载 User Manual PDF → 第 2 章 Body Overview",
+            "note": "上面这个链接是 GT 系列手册实例，标注图在 p.2-11"
+          }
+        }
+      ],
+      "notes": [
+        "官方结论：做完 EC Reset 仍不出 MSI logo，就联系服务中心检测硬件"
+      ],
+      "source": "https://www.msi.com/faq/faq-9990"
+    },
+    {
+      "id": "surface",
+      "name": "Microsoft Surface",
+      "models": "Pro / Laptop / Book",
+      "procedures": [
+        {
+          "label": "双键强制关机",
+          "keys": [
+            "VOLUP",
+            "POWER"
+          ],
+          "hold_seconds": 15,
+          "steps": [
+            "同时按住音量加和电源键，按满 15 秒直到屏幕熄灭",
+            "中途屏幕可能闪一下 Surface logo，不要松手",
+            "松开后等 10 秒",
+            "按一下电源键开机"
+          ],
+          "notes": [
+            "完全没反应时，先单独长按电源键 30 秒再走这套，成功率更高"
+          ],
+          "image": {
+            "asset": "svg/surface-side.svg",
+            "per_model": false,
+            "note": "两个音量键是同一条摇杆的两端，按错方向会进 U 盘启动而不是强制关机"
+          }
+        },
+        {
+          "label": "其他组合",
+          "keys": [],
+          "steps": [
+            "音量加 + 短按电源键 → 进 UEFI",
+            "音量减 + 电源键 → 从 U 盘启动"
+          ]
+        }
+      ],
+      "source": "https://www.microsoft.com/surface/en-us/support/hardware-and-drivers/force-shutdown-and-restart"
+    },
+    {
+      "id": "apple",
+      "name": "Apple MacBook",
+      "models": "按芯片代次区分，先在 关于本机 里确认",
+      "procedures": [
+        {
+          "label": "Apple Silicon（M 系列，2020 年后）",
+          "keys": [
+            "POWER"
+          ],
+          "steps": [
+            "彻底关机",
+            "等满 30 秒，不要少",
+            "按电源键开机"
+          ],
+          "notes": [
+            "这些机器没有独立 SMC 芯片，没有 SMC 可复位，网上流传的按键组合对 M 系列一律无效"
+          ]
+        },
+        {
+          "label": "Intel + T2（2018–2020）简版",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 10,
+          "steps": [
+            "关机",
+            "长按电源键或触控 ID 10 秒后松开",
+            "等几秒再按电源键开机"
+          ]
+        },
+        {
+          "label": "Intel + T2 完整 SMC 复位",
+          "keys": [
+            "左Ctrl",
+            "左Option",
+            "右Shift",
+            "POWER"
+          ],
+          "steps": [
+            "关机后按住 左Control + 左Option + 右Shift 7 秒（机器可能自己开机，正常）",
+            "保持不放，再加按电源键，四键一起再按 7 秒",
+            "全部松开，等几秒后开机"
+          ],
+          "image": {
+            "asset": "svg/mac-smc-keys.svg",
+            "per_model": false,
+            "note": "一张图涵盖两代，页面上两个条目复用同一个文件即可"
+          }
+        },
+        {
+          "label": "Intel 无 T2（2017 及更早）",
+          "keys": [
+            "左Shift",
+            "左Ctrl",
+            "左Option",
+            "POWER"
+          ],
+          "hold_seconds": 10,
+          "steps": [
+            "关机后同时按住 左Shift + 左Control + 左Option + 电源键，按满 10 秒",
+            "松开后按电源键开机"
+          ],
+          "notes": [
+            "这一代三个修饰键全在左侧，和 T2 机型不同"
+          ],
+          "image": {
+            "asset": "svg/mac-smc-keys.svg",
+            "per_model": false,
+            "note": "一张图涵盖两代，页面上两个条目复用同一个文件即可"
+          }
+        }
+      ],
+      "source": "https://www.ifixit.com/Wiki/How_to_reset_the_SMC_on_a_Mac"
+    },
+    {
+      "id": "huawei-honor",
+      "name": "华为 / 荣耀",
+      "models": "MateBook / MagicBook",
+      "procedures": [
+        {
+          "label": "强制关机",
+          "keys": [
+            "POWER"
+          ],
+          "hold_seconds": 15,
+          "steps": [
+            "长按电源键 10–15 秒强制关机",
+            "再按电源键开机"
+          ]
+        },
+        {
+          "label": "低电量保护",
+          "keys": [],
+          "steps": [
+            "接原装适配器充 5–30 分钟，确认充电指示灯有反应，再判断"
+          ],
+          "notes": [
+            "官方说明：电量低于 6% 时电路控制器会阻止开机，必须接原装适配器。用第三方或功率不足的充电器容易在这里踩坑"
+          ]
+        }
+      ],
+      "source": "https://www.honor.com/cn/support/content/zh-cn15813525/"
+    },
+    {
+      "id": "other",
+      "name": "其他品牌",
+      "models": "三星 / 技嘉 / 雷蛇 / 机械革命 / 未列出品牌",
+      "procedures": [
+        {
+          "label": "通用思路",
+          "keys": [],
+          "steps": [
+            "先做通用放电 40 秒，跨品牌通用且无风险",
+            "翻机身底部找针孔，在用户手册里搜「重置孔」「电池重置」「Reset Hole」「Emergency」，确认是复位孔再插",
+            "搜索时用「品牌 + 型号 + BIOS recovery」，英文关键词命中率远高于中文",
+            "查官方支持站，第三方文章经常抄错时长和按键"
+          ]
+        },
+        {
+          "label": "系统已启动、仅屏幕黑",
+          "keys": [
+            "WIN",
+            "Ctrl",
+            "Shift",
+            "B"
+          ],
+          "steps": [
+            "重启显卡驱动，屏幕会闪一下并有提示音"
+          ],
+          "notes": [
+            "只在系统已经启动时有效，对开机黑屏无用"
+          ]
+        }
+      ]
+    }
+  ],
+  "stop_conditions": [
+    "进过液体，哪怕当时还能开机",
+    "闻到焦糊味，或机身某处异常发烫",
+    "电池鼓包，后盖或触控板被顶起",
+    "还在保修期内，自己拆机会让保修失效（本手册所有方法均不影响保修）",
+    "做了两轮完整放电和复位仍无变化，重复同样操作不会有新结果"
+  ],
+  "assets": [
+    {
+      "file": "svg/hole-id.svg",
+      "title": "孔位辨识对照",
+      "use": "通用，放在所有针孔类操作之前",
+      "desc": "复位针孔 / 麦克风孔 / 扬声器孔 / 排液孔 / 螺丝孔 五者的区分特征"
+    },
+    {
+      "file": "svg/thinkpad-bottom.svg",
+      "title": "ThinkPad 底部视图",
+      "use": "联想应急复位孔"
+    },
+    {
+      "file": "svg/lenovo-reset-vs-novo.svg",
+      "title": "复位孔 vs Novo 按钮",
+      "use": "联想，防误操作"
+    },
+    {
+      "file": "svg/acer-msi-bottom.svg",
+      "title": "宏碁 / 微星底部视图",
+      "use": "两家的电池重置孔"
+    },
+    {
+      "file": "svg/surface-side.svg",
+      "title": "Surface 机身上缘按键",
+      "use": "区分音量加与音量减"
+    },
+    {
+      "file": "svg/mac-smc-keys.svg",
+      "title": "Mac SMC 按键图",
+      "use": "全手册唯一的键盘图，因为左右修饰键必须分清"
+    }
+  ]
+}

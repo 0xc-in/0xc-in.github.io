@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" role="img" aria-label="Surface 机身侧面按键位置，区分音量加与音量减">
+  <style>
+    .ln{fill:none;stroke:currentColor;stroke-width:2}
+    .thin{fill:none;stroke:currentColor;stroke-width:1.4;opacity:.5}
+    .t{font-family:system-ui,'PingFang SC','Microsoft YaHei',sans-serif;fill:currentColor}
+    .h{font-size:16px;font-weight:700}
+    .d{font-size:12.5px;opacity:.72}
+    .ok{stroke:var(--accent,#B33A22);stroke-width:2.5;fill:none}
+    .okt{fill:var(--accent,#B33A22);font-weight:700;font-size:13px}
+    .lead{stroke:var(--accent,#B33A22);stroke-width:1;opacity:.8;fill:none}
+    .mute{stroke:currentColor;stroke-width:1;opacity:.5;fill:none}
+  </style>
+
+  <text class="t h" x="0" y="18">Surface 机身上缘 · 别把音量加按成音量减</text>
+  <text class="t d" x="0" y="38">两个音量键是同一条摇杆的两端，靠得很近。按错方向会进 U 盘启动，而不是强制关机。</text>
+
+  <!-- top edge strip -->
+  <rect class="ln" x="60" y="80" width="600" height="44" rx="10"/>
+  <text class="t d" x="360" y="140" text-anchor="middle" font-size="11">机身上缘（从正面看的顶边）</text>
+
+  <!-- power button -->
+  <rect class="ok" x="132" y="92" width="52" height="20" rx="10"/>
+  <path class="lead" d="M158 92V64"/>
+  <text class="t okt" x="158" y="58" text-anchor="middle">电源键</text>
+
+  <!-- volume rocker -->
+  <rect class="ln" x="300" y="92" width="120" height="20" rx="10"/>
+  <line class="thin" x1="360" y1="92" x2="360" y2="112"/>
+  <path class="lead" d="M330 92V64"/>
+  <text class="t okt" x="330" y="58" text-anchor="middle">音量 +</text>
+  <path class="mute" d="M390 112v28"/>
+  <text class="t d" x="390" y="158" text-anchor="middle" font-size="12.5">音量 −（不要按这个）</text>
+
+  <text class="t d" x="0" y="196">音量 + 与电源键同时按住 15 秒 = 强制关机。中途屏幕会闪一下 logo，不要松手。</text>
+  <text class="t d" x="0" y="216">音量 + 与电源键短按 = 进 UEFI。音量 − 与电源键 = 从 U 盘启动。</text>
+  <text class="t d" x="0" y="236">摸不准方向就先看屏幕朝向：靠近电源键的那一端是音量 +。</text>
+</svg>
